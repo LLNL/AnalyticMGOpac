@@ -6,8 +6,8 @@ title: AnalyticMGOpac
 message: LLNL-CODE-858992
 type: software
 authors:
-  - given-names: Thomas A
-    name-particle: Thomas Brunner
+  - given-names: Thomas
+    name-particle: A
     family-names: Brunner
     affiliation: Lawrence Livermore National Laboratory
     orcid: 'https://orcid.org/0000-0002-0629-6397'
