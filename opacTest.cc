@@ -14,6 +14,10 @@
 #define FMT_HEADER_ONLY 1
 #include "fmt/format.h"
 
+#if defined(__linux__)
+#include <fenv.h>
+#endif
+
 void printRange(std::FILE *file, const std::vector<double> &xs, std::string name)
 {
    fmt::print(file, "{} = [", name);
@@ -36,6 +40,13 @@ void printRange(std::FILE *file, std::vector<double> &xs, std::string name, std:
 
 int main()
 {
+#if defined(__linux__)
+   // This is in here for supporting Linux's floating point exceptions.
+   feenableexcept(FE_DIVBYZERO);
+   feenableexcept(FE_INVALID);
+   feenableexcept(FE_OVERFLOW);
+#endif
+
    //-------------------------------------------------------------------
    // Open an output file for testing.
    std::FILE *planckFile = std::fopen("data.py", "w");
@@ -61,7 +72,7 @@ int main()
                            2.826076380281411e+01,
                            4.500000000000000e+01};
 
-   std::vector temps{1.0e-3, 1.0e-2, 0.1, 0.5, 1.0};
+   std::vector temps{1.0e-6, 1.0e-5, 1.0e-4, 1.0e-3, 1.0e-2, 0.1, 0.5, 1.0, 10.0, 100.0, 1000.0};
    std::vector materials{std::make_tuple(/*name =*/"iron",
                                          /*epsilonMin =*/0.05,
                                          /*epsilonEdge =*/7.0,

@@ -146,16 +146,51 @@ void MultiGroupIntegrator::computeGroupAverages(const double T,
          }
       }
 
-      planckAverage[g] = groupResults[0] / groupResults[1];
-      rosselandAverage[g] = groupResults[2] / groupResults[3];
+      if (groupResults[1] > 0.0)
+      {
+         planckAverage[g] = groupResults[0] / groupResults[1];
+      }
+      else
+      {
+         // For very large epsilon = groupBounds/T, the denominator is zero
+         // The weight is also a rapidly decaying exponetial, so the average
+         // will essentially be at the left boundary of the group.
+         planckAverage[g] = opac.computeKappa(groupBounds[g] / T, T, rho);
+      }
+
+      if (groupResults[3] > 0.0)
+      {
+         rosselandAverage[g] = groupResults[2] / groupResults[3];
+      }
+      else
+      {
+         // For very large epsilon = groupBounds/T, the denominator is zero
+         // The weight is also a rapidly decaying exponetial, so the average
+         // will essentially be at the left boundary of the group.
+         rosselandAverage[g] = opac.computeKappa(groupBounds[g] / T, T, rho);
+      }
 
       // We need unshifted values the for total emission calculation
       b_g[g] = groupResults[5];
       dbdT_g[g] = groupResults[6];
    }
    // Compute grey results.
-   planckMean = globalResults[0] / globalResults[1];
-   rosselandMean = globalResults[2] / globalResults[3];
+   if (globalResults[0] > 0.0 and globalResults[1] > 0.0)
+   {
+      planckMean = globalResults[0] / globalResults[1];
+   }
+   else
+   {
+      planckMean = 0.0;
+   }
+   if (globalResults[0] > 0.0 and globalResults[3] > 0.0)
+   {
+      rosselandMean = globalResults[2] / globalResults[3];
+   }
+   else
+   {
+      rosselandMean = 0.0;
+   }
 }
 
 //-----------------------------------------------------------------------------
