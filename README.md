@@ -3,7 +3,7 @@
 This C++14 code numerically integrates the opacity formulas for the test problem described
 in
 * Thomas A. Brunner, "A Family of Multi-Dimensional Thermal Radiative Transfer Test Problems",
-  2023, LLNL-TR-858450, [DOI 10.2172/2280904]( https://doi.org/10.2172/2280904)
+  2023, LLNL-TR-858450-REV-1, [DOI 10.2172/2280904]( https://doi.org/10.2172/2280904)
 
 Please see that document for a full description.
 
