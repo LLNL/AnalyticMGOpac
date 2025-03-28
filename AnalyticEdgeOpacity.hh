@@ -52,17 +52,17 @@ class AnalyticEdgeOpacity
    // epsilon: photon energy $\epsilon = h\nu$ in the same units as T
    // T: material temperature, really $k T$, in energy units.
    // rho: material density, mass per volume
-   double computeKappa(const double epsilon, const double T, const double rho) const;
+   [[nodiscard]] double computeKappa(const double epsilon, const double T, const double rho) const;
 
    // Computes the frequency dependent opacity with units of inverse length in Eq. 24
    // Same inputs as on computeKappa
-   double computeSigma(const double epsilon, const double T, const double rho) const
+   [[nodiscard]] double computeSigma(const double epsilon, const double T, const double rho) const
    {
       return rho * computeKappa(epsilon, T, rho);
    }
 
    // Compute locations to break numerical integrations into subregions near features
-   std::vector<double> computeBreaks() const;
+   [[nodiscard]] std::vector<double> computeBreaks() const;
 
   private:
    // The lowest photon energy used to compute an opacity,

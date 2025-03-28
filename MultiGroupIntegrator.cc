@@ -67,8 +67,8 @@ inline void gauss16Integrate(Func f, const double a, const double b, const int n
       0.02715245941175411,
    };
 
-   double mean = 0.5 * (b + a);
-   double scale = 0.5 * (b - a);
+   const double mean = 0.5 * (b + a);
+   const double scale = 0.5 * (b - a);
    std::array<double, maxVars()> eval;
 
    for (int i = 0; i < glOrder; ++i)
@@ -93,7 +93,7 @@ void MultiGroupIntegrator::computeGroupAverages(const double T,
                                                 double &planckMean,
                                                 double &rosselandMean) const
 {
-   int numGroups = groupBounds.size() - 1;
+   const int numGroups = groupBounds.size() - 1;
 
    planckAverage.resize(numGroups);
    rosselandAverage.resize(numGroups);
@@ -223,11 +223,11 @@ std::vector<double> MultiGroupIntegrator::computeAllSubRanges(double T) const
    std::vector<double> proposedBreaks(opacBreaks);
 
    // Normalized photon energy breaks to accurately integrate the Planck function
-   std::array<double, 28> planckBreaks{
+   constexpr std::array<double, 28> planckBreaks{
       0.0, 0.25,   0.5,  1.0,  1.69, 2.0,   2.34, 2.82,  2.92, 3.5,  3.83, 4.45, 4.97, 6.19,
       9.0, 12.965, 14.0, 16.0, 18.0, 21.26, 25.0, 29.07, 31.0, 34.0, 38.0, 42.0, 46.0, 50.0,
    };
-   for (double ab : planckBreaks)
+   for (const double ab : planckBreaks)
    {
       proposedBreaks.push_back(ab * T);
    }
@@ -249,7 +249,7 @@ std::vector<double> MultiGroupIntegrator::filterRanges(double lowBound,
    subRanges.push_back(lowBound);
    double lastBreak = lowBound;
 
-   for (double b : allRanges)
+   for (const double b : allRanges)
    {
       if (lastBreak * (1.0 + safetyFactor) < b and b < highBound * (1.0 - safetyFactor))
       {

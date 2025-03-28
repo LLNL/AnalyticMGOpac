@@ -24,7 +24,7 @@ class MultiGroupIntegrator
    MultiGroupIntegrator(const AnalyticEdgeOpacity opac_, std::vector<double> groupBounds_)
       : opac{opac_},
         opacBreaks{opac.computeBreaks()},
-        groupBounds{groupBounds_}
+        groupBounds{std::move(groupBounds_)}
    {
       // We want to integrate from zero to infinity; upper bound is dealt with in the integration.
       groupBounds[0] = 0.0;
@@ -51,12 +51,12 @@ class MultiGroupIntegrator
    void computeIntegrand(double epsilon, double rho, double T, double shift, double *results) const;
 
    // Merges the opacity breaks and ones needed for reasonable integration of the Planck function
-   std::vector<double> computeAllSubRanges(double T) const;
+   [[nodiscard]] std::vector<double> computeAllSubRanges(double T) const;
 
    // filters the breaks from computeAllSubranges for ones in one group only defined
    // by lowBound and highBound.  safetyFactor is a relative tolerance for making sure
    // no subrange is too small.
-   std::vector<double> filterRanges(double lowBound,
+   [[nodiscard]] std::vector<double> filterRanges(double lowBound,
                                     double highBound,
                                     const std::vector<double> &allRanges,
                                     const double safetyFactor) const;
