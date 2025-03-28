@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <functional>
 #include <vector>
 
 namespace AnalyticMGOpac
@@ -26,11 +25,8 @@ constexpr int maxVars()
 // Standard Gauss integration using 16 points over the range [a,b].  The function $f$
 // evaluates numVars integrands and stores them in result.  numVars must be less than maxVars().
 // result is assumed to be zeroed on entry.
-inline void gauss16Integrate(std::function<void(double, double *, int)> f,
-                             const double a,
-                             const double b,
-                             const int numVars,
-                             double *result)
+template <typename Func>
+inline void gauss16Integrate(Func f, const double a, const double b, const int numVars, double *result)
 {
    constexpr int glOrder{16};
    constexpr std::array<double, glOrder> muGauss{

@@ -7,7 +7,6 @@
 #include "MultiGroupIntegrator.hh"
 
 #include <cstdio>
-#include <functional>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -28,7 +27,7 @@ void printRange(std::FILE *file, const std::vector<double> &xs, std::string name
    fmt::print(file, "]\n");
 }
 
-void printRange(std::FILE *file, std::vector<double> &xs, std::string name, std::function<double(double)> f)
+template <typename Func> void printRange(std::FILE *file, std::vector<double> &xs, std::string name, Func f)
 {
    fmt::print(file, "{} = [", name);
    for (auto x : xs)
@@ -172,14 +171,12 @@ int main()
             std::string key = fmt::format("('{}',{},{})", name, rho, T);
             fmt::print(planckFile, "detailedKeys.append({})\n", key);
             printRange(planckFile, epsilons, fmt::format("epsilon[{}]", key));
-            printRange(planckFile,
-                       epsilons,
-                       fmt::format("b[{}]", key),
-                       [=](double x) { return AnalyticMGOpac::safePlanck(x / T); });
-            printRange(planckFile,
-                       epsilons,
-                       fmt::format("r[{}]", key),
-                       [=](double x) { return AnalyticMGOpac::safeRoss(x / T); });
+            printRange(planckFile, epsilons, fmt::format("b[{}]", key), [=](double x) {
+               return AnalyticMGOpac::safePlanck(x / T);
+            });
+            printRange(planckFile, epsilons, fmt::format("r[{}]", key), [=](double x) {
+               return AnalyticMGOpac::safeRoss(x / T);
+            });
 
             std::vector<double> planckAverage;
             std::vector<double> rosselandAverage;
@@ -188,10 +185,9 @@ int main()
             double planckMean{0.0};
             double rosselandMean{0.0};
 
-            printRange(planckFile,
-                       epsilons,
-                       fmt::format("kappa[{}]", key),
-                       [=](double x) { return opac.computeKappa(x, T, rho); });
+            printRange(planckFile, epsilons, fmt::format("kappa[{}]", key), [=](double x) {
+               return opac.computeKappa(x, T, rho);
+            });
             opacInt
                .computeGroupAverages(T, rho, planckAverage, rosselandAverage, b_g, dbdT_g, planckMean, rosselandMean);
 
